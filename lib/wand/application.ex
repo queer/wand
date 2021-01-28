@@ -10,10 +10,17 @@ defmodule Wand.Application do
     {base_flags, argv} = OptionParser.parse_head! System.argv(), Cli.default_parse_opts()
     if Keyword.get(base_flags, :debug) do
       Logger.configure level: :debug
+    else
+      Logger.configure level: :error
     end
     Logger.debug "mahou: singyeong: dsn = #{Application.get_env :wand, :singyeong_dsn}"
 
     out = start_cli()
+    if Keyword.get(base_flags, :debug) do
+      Logger.configure level: :debug
+    else
+      Logger.configure level: :info
+    end
     Cli.run base_flags, argv
     # give messages time to do the thing
     # TODO: lol
