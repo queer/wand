@@ -25,9 +25,8 @@ defmodule Wand.MixProject do
     [
       {:bakeware, "~> 0.1.4"},
       {:typed_struct, "~> 0.2.1"},
-      {:singyeong, "~> 0.4.0"},
       {:progress_bar, "~> 2.0"},
-      {:libmahou, git: "git@github.com:queer/libmahou.git"},
+      {:mahou, git: "git@github.com:queer/libmahou.git"},
     ]
   end
 
