@@ -23,11 +23,15 @@ defmodule Wand.Commands.Containers do
 
   defp log_containers(clients, key) do
     containers = Enum.flat_map clients, &(&1["metadata"]["#{key}_container_ids"])
+    container_names = Enum.flat_map clients, &(&1["metadata"]["#{key}_container_names"])
+
     Logger.info "#{key} containers: "
     if containers == [] do
       Logger.info "None"
     else
       containers
+      |> Enum.zip(container_names)
+      |> Enum.map(fn {id, name} -> "#{name} (#{id})" end)
       |> Enum.join("\n- ")
       |> Logger.info
     end
