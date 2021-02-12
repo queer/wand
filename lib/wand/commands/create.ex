@@ -26,6 +26,7 @@ defmodule Wand.Commands.Create do
     else
       Logger.warn "create: nothing to create S:"
       Logger.warn "create: did you remember to pass -f?"
+      Logger.warn "create: (this implies eventually being able to pipe in configs via stdin)"
       {:error, :no_input}
     end
   end
@@ -34,9 +35,12 @@ defmodule Wand.Commands.Create do
     Logger.info "create: making #{length apps} container(s)"
     Logger.info "create: app images:\n* #{apps |> Enum.map(&("#{&1.namespace}:#{&1.name} -> #{&1.image}")) |> Enum.join("\n* ")}"
 
-    msg = Message.create %CreateContainer{
+    msg =
+      %CreateContainer{
         apps: apps,
       }
+      |> Message.create
+      |> Message.encode
 
     "pig"
     |> Query.new

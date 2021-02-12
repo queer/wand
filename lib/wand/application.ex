@@ -35,15 +35,14 @@ defmodule Wand.Application do
       done: [IO.ANSI.green(), "mahou: connected!", IO.ANSI.reset()],
       frames: :bars,
     ], fn ->
-      dsn =
-        :wand
-        |> Application.get_env(:singyeong_dsn)
-        |> Singyeong.parse_dsn
+      dsn = Application.get_env :wand, :singyeong_dsn
 
-      children = [
-        {Singyeong.Client, dsn},
-        Singyeong.Producer,
-      ]
+      children =
+        [
+          {Singyeong.Client, {nil, Singyeong.parse_dsn(dsn)}},
+          Singyeong.Producer,
+          Wand.Consumer,
+        ]
 
       opts = [strategy: :one_for_one, name: Wand.Supervisor]
       sup_res = Supervisor.start_link(children, opts)

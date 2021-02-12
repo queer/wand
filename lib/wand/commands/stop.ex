@@ -19,11 +19,13 @@ defmodule Wand.Commands.Stop do
     kill? = Keyword.get flags, :kill, false
     Logger.info "state: #{if kill?, do: "kill", else: "stop"}: containers:\n* #{Enum.join argv, "\n* "}"
     for app_name <- argv do
-      msg = Message.create %ChangeContainerStatus{
+      msg = %ChangeContainerStatus{
           name: app_name,
           namespace: Keyword.get(flags, :namespace, nil),
           command: if(kill?, do: :kill, else: :stop),
         }
+        |> Message.create
+        |> Message.encode
 
       "pig"
       |> Query.new
